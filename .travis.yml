@@ -12,7 +12,9 @@ env:
         - SYMFONY_DEPRECATIONS_HELPER=weak
 
 before_install:
+    - travis_retry sudo apt-get install parallel
     - composer self-update
+    - if [ "$TRAVIS_PHP_VERSION" != "hhvm-nightly" ]; then phpenv config-rm xdebug.ini; fi;
     - if [ "$TRAVIS_PHP_VERSION" != "hhvm-nightly" ]; then echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
     - if [ "$TRAVIS_PHP_VERSION" != "hhvm-nightly" ] && [ $(php -r "echo PHP_MINOR_VERSION;") -le 4 ]; then echo "extension = apc.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
     - if [ "$TRAVIS_PHP_VERSION" != "hhvm-nightly" ]; then pecl install -f memcached-2.1.0; fi;
